@@ -1,5 +1,5 @@
 <template>
-  <p>{{ url }}</p>
+  <p><b>{{ url }}</b></p>
 
   <div :id="'treemap-' + index" class="svg-container"></div>
 </template>
@@ -11,10 +11,6 @@ import * as d3 from 'd3'
 export default defineComponent({
   props: ['colorData', 'url', 'index'],
   updated () {
-    console.log(this.colorData)
-    console.log(this.url)
-    console.log(this.index)
-
     // Clear the treemap
     d3.select(`#treemap-${this.index}`).selectAll('*').remove()
 

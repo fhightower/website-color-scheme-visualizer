@@ -1,4 +1,13 @@
 <template>
+  <div v-if="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div v-if="urlsColorData && Object.keys(urlsColorData).length !== 0">
+    <button @click="reload">Process more URLs</button>
+    <br><br>
+  </div>
+
   <div class="form" v-show="Object.keys(urlsColorData).length === 0">
     <form @submit.prevent="processURLs">
       <input type="text" placeholder="Enter comma-separated URLs here..." id="urls" v-model="urls">
@@ -8,6 +17,10 @@
 
   <div v-for="(colorData, url, index) in urlsColorData" :key="url">
     <URLColorTreeMap :colorData="colorData" :url="url" :index="index"/>
+  </div>
+
+  <div v-if="urlsColorData && Object.keys(urlsColorData).length !== 0">
+    <button @click="reload">Process more URLs</button>
   </div>
 </template>
 
@@ -26,20 +39,19 @@ export default defineComponent({
   },
   data () {
     return {
+      error: '',
       urls: '',
       urlsColorData: {}
     }
   },
   methods: {
     processURLs () {
+      this.error = ''
       const splitUrls = this.urls.split(separator)
       if (splitUrls.length > maxUrls) {
-        // todo: implement
-        console.log('here!')
-        return
+        this.error = `You entered more than ${maxUrls} URLs. We will only process the first ${maxUrls}.`
       }
 
-      // TODO: Update display to create unique ID for each url
       this.urlsColorData = {
         'https://liine.com': [
           {
@@ -141,7 +153,16 @@ export default defineComponent({
           console.error(error)
         })
       */
+    },
+    reload () {
+      window.location.reload()
     }
   }
 })
 </script>
+
+<style>
+.error-message {
+  color: red;
+}
+</style>
